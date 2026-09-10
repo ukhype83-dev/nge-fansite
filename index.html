@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%8D%AC%3C/text%3E%3C/svg%3E">
+<title>The Rise and Fall of Nick's Gaming Emporium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..700&family=Hanken+Grotesk:wght@400;500;700;800&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+
+<style>
+/* ============================================================
+   THE RISE AND FALL OF NICK'S GAMING EMPORIUM — a documentary long-read
+   Design: evidence-room noir. Tarnished butterscotch gold as
+   the one bold color; oxblood reserved for the crime beats.
+   ============================================================ */
+
+:root{
+  /* light = "paper case-file" (holds on a light host ground) */
+  --ground:#E9E3D4;
+  --surface:#F3EEE1;
+  --surface-2:#DED6C2;
+  --ink:#201B14;
+  --ink-soft:#5B5346;
+  --ink-faint:#8A8172;
+  --rule:#CDBFA0;
+  --gold:#9A6B12;         /* tarnished butterscotch, darkened for light bg */
+  --gold-bright:#B4832A;
+  --oxblood:#7A2E24;
+  --grade:0deg;           /* per-chapter hue nudge, set inline */
+  --measure:64ch;
+  --grain-opacity:.035;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#14110E;
+    --surface:#1C1813;
+    --surface-2:#262019;
+    --ink:#ECE5D4;
+    --ink-soft:#A99E8B;
+    --ink-faint:#6E655723;
+    --ink-faint:#7C7364;
+    --rule:#332C22;
+    --gold:#C89B3C;
+    --gold-bright:#E4B854;
+    --oxblood:#9A3A2C;
+    --grain-opacity:.05;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#14110E;
+  --surface:#1C1813;
+  --surface-2:#262019;
+  --ink:#ECE5D4;
+  --ink-soft:#A99E8B;
+  --ink-faint:#7C7364;
+  --rule:#332C22;
+  --gold:#C89B3C;
+  --gold-bright:#E4B854;
+  --oxblood:#9A3A2C;
+  --grain-opacity:.05;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"Hanken Grotesk",system-ui,-apple-system,sans-serif;
+  font-size:clamp(1.02rem,.62rem + .8vw,1.2rem);
+  line-height:1.72;
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+::selection{background:var(--gold);color:var(--ground)}
+
+/* grain + vignette — fixed, non-interactive */
+.grain{
+  position:fixed;inset:0;z-index:9;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:var(--grain-opacity);mix-blend-mode:overlay;
+}
+.vignette{
+  position:fixed;inset:0;z-index:8;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 30%,transparent 55%,rgba(0,0,0,.35) 100%);
+}
+@media (prefers-color-scheme:light){.vignette{opacity:.4}}
+
+/* ---- shared type helpers ---- */
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.label{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.7rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--ink-faint);font-weight:500;
+}
+.display{font-family:"Fraunces",Georgia,serif;font-optical-sizing:auto}
+
+.wrap{max-width:var(--measure);margin-inline:auto;padding-inline:clamp(1.2rem,5vw,2rem)}
+.rule{height:1px;background:var(--rule);border:0;margin:0}
+
+/* the gold butterscotch-twist divider (the logo's apostrophe) */
+.twist{display:flex;align-items:center;gap:1rem;justify-content:center;margin:0}
+.twist::before,.twist::after{content:"";height:1px;flex:1;background:var(--rule)}
+.twist span{
+  color:var(--gold);font-size:1.1rem;line-height:1;
+  transform:rotate(45deg);letter-spacing:.1em;
+}
+
+/* ============================================================ HERO */
+.hero{
+  min-height:100svh;display:flex;flex-direction:column;justify-content:space-between;
+  padding:clamp(1.4rem,4vw,2.6rem);position:relative;overflow:hidden;
+  background:
+    radial-gradient(90% 120% at 78% 10%,color-mix(in oklab,var(--gold) 12%,transparent),transparent 60%),
+    linear-gradient(180deg,var(--surface),var(--ground));
+  border-bottom:1px solid var(--rule);
+}
+.hero__top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;z-index:2}
+.hero__ticker{color:var(--ink-soft)}
+.hero__ticker b{color:var(--gold);font-weight:600}
+.hero__center{z-index:2;margin:auto 0;max-width:20ch}
+.hero__kicker{color:var(--gold);margin:0 0 1.4rem}
+.hero h1{
+  font-family:"Fraunces",Georgia,serif;font-weight:900;font-optical-sizing:auto;
+  font-size:clamp(3.2rem,7vw + 1rem,8.5rem);line-height:.92;margin:0;
+  letter-spacing:-.02em;text-wrap:balance;color:var(--ink);
+  font-variation-settings:"SOFT" 0,"WONK" 1;
+}
+.hero h1 em{font-style:italic;color:var(--gold);font-variation-settings:"WONK" 1}
+.hero__sub{
+  margin:1.8rem 0 0;max-width:46ch;font-size:clamp(1.05rem,.7rem+.7vw,1.3rem);
+  color:var(--ink-soft);line-height:1.6;
+}
+.hero__foot{display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap;z-index:2}
+.hero__exhibit{max-width:40ch;color:var(--ink-faint);font-size:.82rem;line-height:1.5}
+.scrollcue{writing-mode:vertical-rl;color:var(--ink-faint);letter-spacing:.24em}
+/* the 2015 mark, rendered native so it sits clean on the dark: dim soulless grey, gold butterscotch dot */
+.hero__mark{
+  position:absolute;z-index:1;pointer-events:none;user-select:none;
+  right:clamp(1.2rem,5vw,5rem);top:50%;transform:translateY(-50%);
+  display:flex;align-items:flex-end;
+  font-family:"Hanken Grotesk",system-ui,sans-serif;font-weight:800;
+  font-size:clamp(6rem,15vw,13rem);line-height:.78;letter-spacing:-.05em;
+  color:color-mix(in oklab,var(--ink) 38%,var(--ground));
+}
+.hero__mark i{width:.2em;height:.2em;border-radius:50%;background:var(--gold-bright);margin:0 0 .1em .06em}
+.hero__mark small{
+  position:absolute;bottom:-1.5em;right:.1em;font-family:"IBM Plex Mono",monospace;
+  font-size:.11em;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-faint);white-space:nowrap;
+}
+@media(max-width:760px){.hero__mark{display:none}}
+
+/* ============================================================ PROLOGUE / STANDFIRST */
+.standfirst{padding:clamp(3.5rem,10vw,7rem) 0}
+.standfirst p{
+  font-family:"Fraunces",Georgia,serif;font-weight:400;font-optical-sizing:auto;
+  font-size:clamp(1.4rem,.9rem+1.5vw,2.15rem);line-height:1.4;
+  color:var(--ink);text-wrap:pretty;margin:0 0 1.4rem;
+}
+.standfirst .drop::first-letter{
+  float:left;font-family:"Fraunces",Georgia,serif;font-weight:900;
+  font-size:5.2em;line-height:.72;padding:.02em .12em 0 0;color:var(--gold);
+}
+.standfirst .small{
+  font-family:"Hanken Grotesk",sans-serif;font-size:1.02rem;line-height:1.7;
+  color:var(--ink-soft);max-width:var(--measure);
+}
+
+/* ============================================================ CHAPTER OPENER (full-bleed) */
+.opener{
+  min-height:82svh;display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(2rem,7vw,5rem) clamp(1.2rem,5vw,2rem);position:relative;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  background:
+    linear-gradient(180deg,
+      color-mix(in oklab,var(--surface) 92%,var(--chapter-tint,transparent)),
+      var(--ground));
+}
+.opener__no{
+  font-family:"IBM Plex Mono",monospace;font-size:.8rem;letter-spacing:.3em;
+  color:var(--gold);text-transform:uppercase;margin:0 0 1.5rem;
+}
+.opener h2{
+  font-family:"Fraunces",Georgia,serif;font-weight:800;font-optical-sizing:auto;
+  font-size:clamp(2.6rem,5vw+1rem,6rem);line-height:.98;margin:0;
+  letter-spacing:-.015em;text-wrap:balance;max-width:16ch;
+  font-variation-settings:"SOFT" 0,"WONK" 0;
+}
+.opener__years{
+  margin:1.6rem 0 0;font-family:"IBM Plex Mono",monospace;font-size:1rem;
+  letter-spacing:.1em;color:var(--ink-soft);
+}
+.opener__dek{margin:1.4rem 0 0;max-width:44ch;color:var(--ink-soft);font-size:1.08rem}
+
+/* ============================================================ BODY PROSE */
+.prose{padding:clamp(2.6rem,7vw,5rem) 0}
+.prose p{margin:0 0 1.35rem;text-wrap:pretty}
+.prose p + p{margin-top:0}
+.prose h3{
+  font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:1.5rem;
+  margin:2.6rem 0 1rem;color:var(--ink);letter-spacing:-.01em;
+}
+.prose a{color:var(--gold);text-underline-offset:3px;text-decoration-thickness:1px}
+.lede{color:var(--ink);font-weight:500}
+.gold{color:var(--gold)}
+.blood{color:var(--oxblood)}
+
+/* pull quote */
+.pull{margin:2.8rem 0}
+.pull blockquote{
+  margin:0;font-family:"Fraunces",Georgia,serif;font-weight:500;font-optical-sizing:auto;
+  font-size:clamp(1.6rem,1rem+1.8vw,2.6rem);line-height:1.2;letter-spacing:-.01em;
+  color:var(--gold);text-wrap:balance;
+}
+.pull cite{
+  display:block;margin-top:1rem;font-family:"IBM Plex Mono",monospace;font-style:normal;
+  font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);
+}
+
+/* Todd's margin note — the human voice breaking the record */
+.todd{
+  margin:2.4rem 0;padding:1.1rem 1.3rem 1.2rem;
+  border-left:2px solid var(--oxblood);background:var(--surface);
+  font-family:"IBM Plex Mono",monospace;font-size:.9rem;line-height:1.66;
+  color:var(--ink-soft);
+}
+.todd::before{
+  content:"todd — in the margin";display:block;
+  font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--oxblood);margin-bottom:.7rem;
+}
+.todd p{margin:0 0 .7rem}.todd p:last-child{margin:0}
+
+/* ============================================================ EVIDENCE PLATE (image) */
+.plate{margin:2.8rem 0;background:var(--surface);border:1px solid var(--rule)}
+.plate.bleed{max-width:min(1100px,94vw);margin-inline:auto}
+.plate__img{
+  aspect-ratio:16/10;position:relative;overflow:hidden;
+  background:
+    repeating-linear-gradient(135deg,transparent 0 22px,color-mix(in oklab,var(--gold) 5%,transparent) 22px 23px),
+    linear-gradient(160deg,var(--surface-2),var(--ground));
+  display:flex;align-items:center;justify-content:center;text-align:center;padding:1.5rem;
+  border-bottom:1px solid var(--rule);
+}
+.plate__img::after{content:"";position:absolute;inset:9px;border:1px solid var(--rule)}
+.plate.portrait .plate__img{aspect-ratio:4/5}
+.plate__ph{max-width:34ch;z-index:1}
+.plate__ph .k{color:var(--gold);font-size:1.4rem;line-height:1;display:block;margin-bottom:.8rem;transform:rotate(45deg)}
+.plate__ph .d{font-family:"Hanken Grotesk",sans-serif;font-size:.92rem;color:var(--ink-soft);line-height:1.5}
+.plate__ph .f{font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--ink-faint);margin-top:.7rem;word-break:break-all}
+.plate img{display:block;width:100%;height:auto}
+/* once a real image has loaded, let the plate take the image's own proportions — no crop, no letterbox.
+   (empty placeholder plates, with no <img>, keep their tidy 4:5 / 16:10 frame) */
+.plate__img:has(img){aspect-ratio:auto;padding:0;background:none}
+.plate__img:has(img)::after{display:none}
+.plate__cap{
+  display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+  padding:.7rem 1rem;font-family:"IBM Plex Mono",monospace;font-size:.72rem;
+  color:var(--ink-faint);letter-spacing:.04em;
+}
+.plate__cap b{color:var(--ink-soft);font-weight:500}
+.tag-new{color:var(--gold)}
+.tag-have{color:var(--ink-faint)}
+
+/* ---- The Mark: the sign over the door, across three eras (real artifacts) ---- */
+.marks{max-width:1120px;margin-inline:auto;padding:clamp(3rem,7vw,5.5rem) clamp(1.2rem,5vw,2rem)}
+.marks__head{max-width:56ch;margin:0 auto clamp(2.2rem,5vw,3.4rem);text-align:center}
+.marks__head .opener__no{margin:0}
+.marks h3{font-family:"Fraunces",Georgia,serif;font-optical-sizing:auto;font-weight:600;
+  font-size:clamp(1.9rem,1rem + 3vw,3rem);letter-spacing:-.015em;line-height:1.06;
+  text-wrap:balance;margin:.5rem 0 0;color:var(--ink)}
+.marks__dek{margin:1.1rem 0 0;color:var(--ink-soft);font-size:1.05rem;line-height:1.6}
+.marks__grid{list-style:none;margin:0;padding:0;display:grid;
+  grid-template-columns:repeat(3,1fr);gap:clamp(1.3rem,3vw,2.4rem);align-items:start}
+.markx{margin:0}
+.markx__frame{
+  background:#F2EDE0;                 /* fixed paper mount so the logos keep their intended light ground in both themes */
+  border:1px solid var(--rule);aspect-ratio:1/1;
+  display:grid;place-items:center;padding:clamp(1.1rem,3.2vw,2rem);
+  position:relative;box-shadow:0 20px 44px -26px rgba(0,0,0,.75);
+}
+.markx__frame::after{content:"";position:absolute;inset:9px;border:1px solid rgba(32,27,20,.14);pointer-events:none}
+.markx__frame img{max-width:100%;max-height:100%;object-fit:contain;display:block;mix-blend-mode:multiply}
+.markx__cap{display:flex;flex-direction:column;gap:.55rem;padding:1.05rem .25rem 0}
+.markx__yr{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.74rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.markx__note{font-size:.9rem;color:var(--ink-soft);line-height:1.55}
+.markx__note em{font-style:italic;color:var(--ink)}
+.marks__coda{text-align:center;margin:clamp(2.4rem,5vw,3.6rem) auto 0;max-width:46ch;
+  font-family:"Fraunces",Georgia,serif;font-style:italic;font-size:clamp(1.15rem,.9rem + .8vw,1.5rem);
+  line-height:1.4;color:var(--ink)}
+.marks__coda b{color:var(--gold);font-style:normal;font-weight:600}
+@media(max-width:800px){
+  .marks__grid{grid-template-columns:1fr;max-width:400px;margin-inline:auto;gap:2rem}
+}
+
+/* ============================================================ THE REEVES TAPES (b-roll contact sheet) */
+.reel{
+  margin:clamp(2.6rem,6vw,4.2rem) 0;padding:clamp(1.5rem,4vw,2.2rem) 0;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  background:
+    linear-gradient(180deg,color-mix(in oklab,var(--surface) 70%,var(--ground)),var(--ground));
+}
+.reel__head{
+  max-width:var(--measure);margin:0 auto 1.2rem;padding-inline:clamp(1.2rem,5vw,2rem);
+  display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:baseline;
+}
+.reel__head h3{font-family:"Fraunces",serif;font-weight:700;font-size:1.15rem;margin:0}
+.reel__head .label{color:var(--gold)}
+.reel__meta{font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--ink-faint);letter-spacing:.04em}
+.reel__track{
+  display:flex;gap:.9rem;overflow-x:auto;scroll-snap-type:x proximity;
+  padding:.3rem clamp(1.2rem,5vw,2rem) 1rem;scrollbar-width:thin;
+  scrollbar-color:var(--rule) transparent;
+}
+.reel__track::-webkit-scrollbar{height:8px}
+.reel__track::-webkit-scrollbar-thumb{background:var(--rule);border-radius:8px}
+.tile{flex:0 0 clamp(200px,46vw,272px);scroll-snap-align:start;background:var(--surface);border:1px solid var(--rule)}
+.tile__media{
+  aspect-ratio:3/4;position:relative;overflow:hidden;display:flex;align-items:center;
+  justify-content:center;text-align:center;padding:1.1rem;border-bottom:1px solid var(--rule);
+  background:
+    repeating-linear-gradient(135deg,transparent 0 16px,color-mix(in oklab,var(--gold) 5%,transparent) 16px 17px),
+    linear-gradient(160deg,var(--surface-2),var(--ground));
+}
+.tile__media img,.tile__media video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+/* real image present → drop the placeholder texture so any letterbox reads as a clean mat, not the hatch */
+.tile__media:has(img),.tile__media:has(video){padding:0;background:var(--ground)}
+.tile__badge{
+  position:absolute;top:.5rem;left:.5rem;z-index:2;font-family:"IBM Plex Mono",monospace;
+  font-size:.58rem;letter-spacing:.12em;padding:.16rem .42rem;color:var(--ground);background:var(--ink-faint);
+}
+.tile.clip .tile__badge{background:var(--gold)}
+.tile.clip .tile__badge::before{content:"▶ "}
+.tile__ph{font-size:.82rem;color:var(--ink-soft);line-height:1.45;z-index:1}
+.tile__cap{
+  display:flex;flex-direction:column;gap:.2rem;padding:.5rem .7rem .6rem;
+  font-family:"IBM Plex Mono",monospace;font-size:.62rem;color:var(--ink-faint);
+}
+.tile__cap b{color:var(--ink-soft);font-weight:500;line-height:1.3;letter-spacing:.01em}
+
+/* ============================================================ TIMELINE (ledger spine) */
+.ledger{padding:clamp(2.4rem,6vw,4rem) 0}
+.ledger__head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.6rem}
+.ledger__head h3{font-family:"Fraunces",serif;font-weight:700;font-size:1.35rem;margin:0}
+.tl{list-style:none;margin:0;padding:0;border-top:1px dashed var(--rule)}
+.tl li{
+  display:grid;grid-template-columns:8.5rem 1fr;gap:1rem;
+  padding:.85rem 0;border-bottom:1px dashed var(--rule);align-items:baseline;
+}
+.tl time{
+  font-family:"IBM Plex Mono",monospace;font-size:.82rem;color:var(--gold);
+  font-variant-numeric:tabular-nums;letter-spacing:.02em;white-space:nowrap;
+}
+.tl .ev{color:var(--ink-soft);font-size:.98rem}
+.tl .ev b{color:var(--ink);font-weight:600}
+.tl li.mark .ev b{color:var(--gold)}
+.tl li.crime time{color:var(--oxblood)}
+.tl li.crime .ev b{color:var(--oxblood)}
+
+/* ============================================================ CAST WALL */
+.wall{padding:clamp(3rem,8vw,6rem) 0}
+.wall__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.card{background:var(--surface);padding:1.3rem 1.3rem 1.5rem;display:flex;flex-direction:column;gap:.55rem}
+.card__ph{
+  aspect-ratio:1;background:linear-gradient(160deg,var(--surface-2),var(--ground));
+  border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;
+  color:var(--ink-faint);font-family:"IBM Plex Mono",monospace;font-size:.66rem;
+  letter-spacing:.14em;text-align:center;padding:.6rem;
+}
+.card.redacted .card__ph{background:#000;color:#000;position:relative}
+.card.redacted .card__ph::after{content:"REMOVED 2004";color:#3a3a3a;font-size:.6rem;letter-spacing:.2em}
+.card__name{font-family:"Fraunces",serif;font-weight:700;font-size:1.15rem;margin:.3rem 0 0;line-height:1.1}
+.card__role{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.08em;color:var(--gold);text-transform:uppercase}
+.card.redacted .card__role{color:var(--oxblood)}
+.card__bio{font-size:.86rem;color:var(--ink-soft);line-height:1.55}
+
+/* ============================================================ FOOTER */
+.foot{border-top:1px solid var(--rule);background:var(--surface);padding:clamp(2.6rem,7vw,4.5rem) 0}
+.foot__grid{display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+.foot h4{font-family:"Fraunces",serif;font-weight:700;font-size:1.1rem;margin:0 0 .6rem}
+.foot p{font-size:.86rem;color:var(--ink-soft);max-width:52ch;margin:0 0 .8rem}
+.foot a{color:var(--gold)}
+.disclaimer{font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--ink-faint);line-height:1.6;max-width:70ch;margin-top:2rem;border-top:1px dashed var(--rule);padding-top:1.4rem}
+
+a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:2px}
+@media (prefers-reduced-motion:no-preference){
+  html{scroll-behavior:smooth}
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+}
+@media (max-width:560px){
+  .tl li{grid-template-columns:1fr;gap:.15rem}
+  .tl time{font-size:.76rem}
+  .hero__center{max-width:none}
+}
+
+.card__img{width:100%;aspect-ratio:1;object-fit:cover;border:1px solid var(--rule);display:block}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<!-- ============================= HERO ============================= -->
+<header class="hero">
+  <div class="hero__top">
+    <span class="label">A documentary in five chapters</span>
+    <span class="hero__ticker mono">NASDAQ: <b>NICK</b> · delisted 2016</span>
+  </div>
+
+  <div class="hero__center">
+    <p class="hero__kicker label">Nick's Gaming Emporium · 1986–2016</p>
+    <h1 class="display">The Rise and<br><em>Fall</em> of Nick's<br>Gaming Emporium</h1>
+    <p class="hero__sub">A true account of the video-game chain his grandmother started, the man who inherited it, and everything he did with thirty years and seven billion dollars once she was no longer watching.</p>
+  </div>
+
+  <div class="hero__foot">
+    <p class="hero__exhibit mono">Assembled from the administrators' archive, released 23 April 2025, and from the one fan site that never came down.</p>
+    <span class="scrollcue mono" aria-hidden="true">SCROLL ↓</span>
+  </div>
+  <div class="hero__mark" aria-hidden="true">nge<i></i><small>the last mark · 2015</small></div>
+</header>
+
+<main>
+
+<!-- ============================= PROLOGUE ============================= -->
+<section class="standfirst wrap reveal" aria-label="Prologue: The Last Refund">
+  <p class="drop">The last thing Nick's Gaming Emporium ever did was give money back.</p>
+  <p>Just after midnight on the 30th of September 2016, in Santa Terezinha de Itaipu, Brazil, a customer returned a copy of <em>Ironcast</em>. The register accepted it — the last entry the company would ever make, a refund of minus 26.72 reais — and then there were no more.</p>
+  <p class="small">Grandma Jean's first rule was <span class="gold">take anything back, no receipt, no questions</span>. The company honoured it right to the very end — which is more than can be said for the man whose name was on the door. He was, by then, four months from a killing and about a year from a cell. This is the distance between those two facts.</p>
+  <div class="twist" aria-hidden="true"><span>❧</span></div>
+</section>
+
+<!-- ============================= CHAPTER I ============================= -->
+<section class="opener reveal" style="--chapter-tint:#C89B3C" aria-label="Chapter One">
+  <div class="wrap" style="max-width:52ch">
+    <p class="opener__no">Chapter One</p>
+    <h2 class="display">So We'll Build the Good One</h2>
+    <p class="opener__years">1986 — 1996 · the ten good years</p>
+    <p class="opener__dek">Before it was a crime scene it was a candy jar. You have to see the good part or none of the rest lands.</p>
+  </div>
+</section>
+
+<div class="prose wrap reveal">
+  <p class="lede">Every honest version of this story begins with a woman who is not the subject of it.</p>
+  <p><strong>Jean Macy</strong> was 61, widowed, and running a haberdashery in Rego Park when her grandson turned up having just been fired from Crazy Lenny's Stereo World. His offence: he had let the neighbourhood kids play the demo console for hours. He called it <em>"loitering with intent to sell."</em> Lenny called it theft of ambience.</p>
+  <p>Nick Reeves was thirty. He had a mullet the colour of a new penny, a blazer he was already too big for, and a theory about how a game store should feel that he could not stop describing. Jean listened to the whole thing, and then she said the sentence that started a company: <span class="gold">"So we'll build the good one."</span></p>
+
+  <div class="pull">
+    <blockquote class="display">"Take anything back. Pay people fair. Everyone gets a butterscotch."</blockquote>
+    <cite>— Jean's Rules, painted on the back-office wall, Store #2</cite>
+  </div>
+
+  <p>Store #1 opened in a Chicago strip mall on the 6th of August 1986 — a concession to her brother Morty, the appliance king who put up the money and wanted the number one over his own door. The first sale in company history was a Civil War strategy game and a side-scrolling platformer, total <span class="mono gold">$68.54</span>. But the <em>real</em> store — the flagship, the one Jean rang the first sale at herself — opened in Queens seven weeks later, on the 28th of September. She kept a butterscotch tin by every register. She photographed every new hire against the back-office wall and made it a rule. That corkboard of faces is the only thing in this story that stays good the whole way through.</p>
+
+  <div class="plate portrait reveal">
+    <div class="plate__img"><span class="plate__ph"><span class="k">❧</span><span class="d">Jean Macy at the Wall, Store #2, opening day — one hand on the candy jar. The keeper of the set.</span><span class="f">have · jean_macy_1986.png</span></span></div>
+    <div class="plate__cap"><span>Exhibit 01 · Founder, Store&nbsp;#2</span><span class="tag-have"><b>ON FILE</b> · Kodachrome '86</span></div>
+  </div>
+
+  <p>They grew the way she wanted: 26 stores in ten years, no faster, because of Rule #4 — <em>never open more stores than you can love.</em> First profit came in 1991, five years in. Nobody got rich. Everybody got a butterscotch. For ten years Nick Reeves was exactly the man his nephew thought he was.</p>
+
+  <div class="todd">
+    <p>this is the part i got right in 1998. i built the fan site when i was fourteen and i thought the <em>whole company</em> was this chapter. the candy, the wall, "the good one." i put a hit counter on it and a midi and i never took it down.</p>
+    <p>i'm forty-four now. i've read the archive. i'm leaving the old site up — you can still visit it — but somebody has to write the rest of it, and there's nobody left but me.</p>
+  </div>
+</div>
+
+<section class="ledger wrap reveal">
+  <div class="ledger__head"><h3 class="display">The good years, dated</h3><span class="label">checked against the archive</span></div>
+  <ol class="tl">
+    <li class="mark"><time>1986·08·06</time><span class="ev"><b>Store #1, Chicago.</b> First sale, transaction_id 1 — $68.54.</span></li>
+    <li class="mark"><time>1986·09·28</time><span class="ev"><b>Store #2, Queens</b> — the flagship. Jean rings the first item: a copy of <em>Memory Manor</em>.</span></li>
+    <li><time>1991</time><span class="ev">First annual profit. Five years in. Rule #4 holding.</span></li>
+    <li><time>1994·03·17</time><span class="ev"><b>IPO.</b> NASDAQ: NICK. Nick wears a suit that does not fit and rings the bell.</span></li>
+    <li><time>1995·12</time><span class="ev">The PlayStation Christmas — Jean's last, best holiday. She works the floor.</span></li>
+    <li class="crime"><time>1996·12·31</time><span class="ev"><b>Jean Macy retires and dies the same day</b>, age 71. The only rule she ever broke was #4, in her final year.</span></li>
+  </ol>
+</section>
+
+<!-- ============================= REEL I ============================= -->
+<section class="reel reveal" aria-label="The Reeves Tapes, 1986 to 1996">
+  <div class="reel__head">
+    <h3 class="display">The Reeves Tapes <span class="label" style="margin-left:.5rem">1986–1996</span></h3>
+    <span class="reel__meta">loose from the archive · 12 tiles · ← drag →</span>
+  </div>
+  <div class="reel__track">
+    <figure class="tile still" data-file="nick_circle_1988"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">The back-room circle — six staff, one joint going round a wall of console boxes, the register unattended.</span></div><figcaption class="tile__cap"><span>~1988</span><b>The back-room circle</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_beanbag_1989"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Asleep in the stockroom beanbag, hugging a light-gun, closing shift.</span></div><figcaption class="tile__cap"><span>1989</span><b>Asleep, hugging a light-gun</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_mario_1990"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">The plumber suit at the Queens grand-reopening — two sizes too small, fully committed.</span></div><figcaption class="tile__cap"><span>1990</span><b>The plumber suit, two sizes too small</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_trolley_1991"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Donuts on a stock trolley in the loading bay, necktie horizontal.</span></div><figcaption class="tile__cap"><span>1991</span><b>Joyriding the stock trolley</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_parrot_1992"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Teaching the shop parrot to say "everyone gets a butterscotch."</span></div><figcaption class="tile__cap"><span>1992</span><b>Teaching the shop parrot to talk</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_cake_1993"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Eating the entire staff birthday cake, unbothered, both hands.</span></div><figcaption class="tile__cap"><span>1993</span><b>Eating the whole birthday cake</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_ribbon_1986"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Cutting the ribbon at store #1 with comically huge scissors, butterscotch tin in the other hand.</span></div><figcaption class="tile__cap"><span>1986</span><b>Cutting the ribbon, store #1</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_demo_1987"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Playing the demo console for a crowd of kids, ignoring a ringing phone — the offence he was fired for, now the job.</span></div><figcaption class="tile__cap"><span>1987</span><b>Demoing the console for the kids</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_kart_1988"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Refereeing a midnight staff kart-racing tournament in a striped shirt and a whistle.</span></div><figcaption class="tile__cap"><span>1988</span><b>Refereeing the midnight tournament</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_sleepover_1990"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Hosting a midnight-launch staff sleepover between the shelves — sleeping bags and pizza boxes.</span></div><figcaption class="tile__cap"><span>1990</span><b>The midnight-launch sleepover</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_claw_1994"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Stuck halfway into a claw machine retrieving a plush for a kid, legs kicking.</span></div><figcaption class="tile__cap"><span>1994</span><b>Stuck in the claw machine</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_conga_1995"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Leading a conga line of staff through the shop floor at the Christmas party, paper crown on.</span></div><figcaption class="tile__cap"><span>1995</span><b>Leading the staff conga line</b></figcaption></figure>
+  </div>
+</section>
+
+<!-- ============================= CHAPTER II ============================= -->
+<section class="opener reveal" style="--chapter-tint:#A98A3C" aria-label="Chapter Two">
+  <div class="wrap" style="max-width:52ch">
+    <p class="opener__no">Chapter Two</p>
+    <h2 class="display">The Best Memorial Is Scale</h2>
+    <p class="opener__years">1996 — 2000 · the inheritance</p>
+    <p class="opener__dek">Grief is only expensive if you can afford it. After 1994, Nick could afford anything.</p>
+  </div>
+</section>
+
+<div class="prose wrap reveal">
+  <p>Jean died on New Year's Eve, and the man who came back to the office in January was not, in any way that mattered, the same one. He had the IPO money now — a public company's worth of it — and he had a hole exactly the shape of the one person who had ever told him no.</p>
+  <p>He hired a CEO to fill it. <strong>Chip Harrington III</strong> was a salesman's salesman, and he had a line ready for the wake: <em>"The best memorial is scale."</em> Nick heard it as permission. Within eighteen months the chain had doubled into four countries. Within three years it was unrecognisable — and so was he.</p>
+
+  <div class="pull">
+    <blockquote class="display">"The best memorial is scale."</blockquote>
+    <cite>— Chet "Chip" Harrington III, CEO, 1997</cite>
+  </div>
+
+  <p>The archive is polite about the next part, because the archive was later cleaned. But the receipts survive in other people's memoirs. There was Sedona: eleven million dollars sunk into <em>Jean's Arcade</em>, a 400-acre "spiritual retreat with Skee-Ball," and a consciousness consultant named Russ who invoiced for peyote as a "clarity input." There was the beginning of the appetite that the rest of this document is really about — the discovery, by a man who had never had money, that money makes every want quieter for exactly one night.</p>
+
+  <div class="plate reveal">
+    <div class="plate__img"><span class="plate__ph"><span class="k">❧</span><span class="d">Nick, IPO day 1994 — ~300 lb, a suit that doesn't fit, NASDAQ badge, sweating under the lights. "A man wearing a costume of himself."</span><span class="f">generate · nick_ipo_1994.png</span></span></div>
+    <div class="plate__cap"><span>Exhibit 02 · The bell</span><span class="tag-have"><b>ON FILE</b> · Ektachrome '94</span></div>
+  </div>
+
+  <p>He named the retreat after her. He named a minor-league hockey team the Butterscotches. He put her word — <em>Emporium</em>, actually his late grandfather Art's word — on eighteen countries' worth of signage. Every monument he built to Jean Macy was, on inspection, a monument to how much he now had. The candy jar stayed on the corkboard. It was the only thing in the founders' corner that couldn't be expensed.</p>
+
+  <div class="todd">
+    <p>he wasn't at the funeral very long. i was twelve. i remember thinking he had somewhere to be and being proud of him for how busy he was.</p>
+    <p>he had somewhere to be.</p>
+  </div>
+</div>
+
+<!-- ============================= REEL II ============================= -->
+<section class="reel reveal" aria-label="The Reeves Tapes, 1996 to 2000">
+  <div class="reel__head">
+    <h3 class="display">The Reeves Tapes <span class="label" style="margin-left:.5rem">1996–2000</span></h3>
+    <span class="reel__meta">the money arrives · 12 tiles · ← drag →</span>
+  </div>
+  <div class="reel__track">
+    <figure class="tile still" data-file="nick_sedona_quest"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Sedona vision quest — poncho, Skee-Ball machine in the desert, Russ nearby with the invoices.</span></div><figcaption class="tile__cap"><span>1999</span><b>Sedona vision quest</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_golfcart_1998"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Golf-carting the HQ corridors during a live board meeting.</span></div><figcaption class="tile__cap"><span>1998</span><b>Golf-carting a board meeting</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_hockey_1999"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Unveiling the minor-league "Butterscotches" in a jersey built for a smaller man.</span></div><figcaption class="tile__cap"><span>1999</span><b>The 'Butterscotches' jersey</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_paperwork_1997"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Face-down in the IPO paperwork, party hat still on.</span></div><figcaption class="tile__cap"><span>1997</span><b>Face-down in the IPO paperwork</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_hottub_2000"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Hot-tub summit — cigar, cordless phone, a controller no one is playing.</span></div><figcaption class="tile__cap"><span>2000</span><b>Hot-tub summit</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_shovel_1999"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Gold shovel at the "Jean's Arcade" groundbreaking. No blueprints in frame.</span></div><figcaption class="tile__cap"><span>1999</span><b>The 'Jean's Arcade' groundbreaking</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_limo_1997"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Leaning out of a stretch-limo sunroof in a too-tight tux at the IPO after-party, spraying champagne.</span></div><figcaption class="tile__cap"><span>1997</span><b>Champagne from the limo</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_yacht_1998"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Steering a rented yacht in a captain's hat he bought that morning, staff clinging on.</span></div><figcaption class="tile__cap"><span>1998</span><b>Captaining a rented yacht</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_karaoke_1998"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Karaoke at the corporate retreat, tie round his head, executives cringing.</span></div><figcaption class="tile__cap"><span>1998</span><b>Karaoke at the retreat</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_russ_1999"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Cross-legged with "Russ" the consultant, both in robes, a crystal and a stack of invoices between them.</span></div><figcaption class="tile__cap"><span>1999</span><b>Russ, gone native</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_statue_1999"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Unveiling a bronze statue of himself in the HQ lobby, striking the statue's exact pose.</span></div><figcaption class="tile__cap"><span>1999</span><b>Unveiling his own bronze</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_helicopter_2000"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Arriving at a strip-mall store opening by helicopter far too big for the car park, wind everywhere.</span></div><figcaption class="tile__cap"><span>2000</span><b>Arriving by helicopter</b></figcaption></figure>
+  </div>
+</section>
+
+<!-- ============================= CHAPTER III ============================= -->
+<section class="opener reveal" style="--chapter-tint:#6f5a34" aria-label="Chapter Three">
+  <div class="wrap" style="max-width:54ch">
+    <p class="opener__no">Chapter Three</p>
+    <h2 class="display">Nobody Will Ever Download a Video Game</h2>
+    <p class="opener__years">2000 — 2009 · the record numbers</p>
+    <p class="opener__dek">On paper, the best years the company ever had. On paper.</p>
+  </div>
+</section>
+
+<div class="prose wrap reveal">
+  <p class="lede">This is the chapter with the good financials in it, which is how you know it's the worst one.</p>
+  <p>By 2010 there were <span class="gold mono">7,000 stores</span> in eighteen countries, and revenue had crested just over <span class="gold mono">$12 billion</span>. Every number an analyst could see went up and to the right. Underneath the numbers, three things were happening at once, and all three led back to the same office.</p>
+
+  <p><strong>The ghost payroll.</strong> For six years the company paid roughly 1,400 employees who did not exist, through a staffing shell christened — with the confidence of the truly caught — after the CFO herself. When it surfaced in 2003 she took the forty-one months. The books were restated. The impossibly clean record that survives is the <em>product</em> of that restatement: the tidiness is the evidence that something happened.</p>
+
+  <p><strong>The retail consultants.</strong> A single expense line from CES 1999 — <span class="mono">$214,000</span>, filed as "retail consultants" — turned out, under a subpoena, to be Las Vegas escorts. It was not, by the standards of what the founder was personally running up in the same city, a large number.</p>
+
+  <p><strong>The Dale Curve.</strong> A man named Wickersham, EVP of Pre-Owned, worked out that a customer's used game was worth exactly thirty cents on the dollar — paid back, more often than not, in cash. It was never illegal. It was never once kind. <em>"A memory,"</em> he liked to say, <em>"is worth what I say it's worth."</em></p>
+
+  <div class="pull">
+    <blockquote class="display">"Nobody will ever download a video game. People need to hold things. It's in the Bible somewhere."</blockquote>
+    <cite>— Gordon Pyle, CEO, on why NGE.com would not be rebuilt</cite>
+  </div>
+
+  <p><strong>The Pokémon Blackout.</strong> The blindness had a bloodline. A decade before Pyle decided downloads were a fad, the founder decided the same thing about the biggest franchise of the age. Sometime in 1998, over a steak he did not pay for, Nick told the console maker's regional account manager that Pokémon was <em>"a Tamagotchi with a lawyer"</em> and would be <em>"landfill by spring."</em> The allocation was throttled. For a decade the shelves carried every unloved spin-off — Dash, Battle Revolution, Trozei — and never once the game a child had actually come in for. The buyer who escalated it in 2003 was quietly moved to loss prevention. The record still shows the wound: the spin-offs sold in their tens of thousands; the flagship games that outsold everything, everywhere else, are simply <em>not there</em>.</p>
+
+  <div class="todd">
+    <p>i worked the floor those summers. kids asked for pokémon diamond every single day, and every single day i pointed them at trozei and watched their faces do the thing. i started keeping a list of what we never had. nobody upstairs ever read the list. i kept it anyway — i'm still keeping it.</p>
+  </div>
+
+  <p><strong>The free game they sold six million times.</strong> The must-have motion console of Christmas 2006 came with a sports game in the box — a pack-in, free, the whole point of it. NGE's peak-era stores took the disc out. The console rang up as one sale; the game that was meant to be inside it rang up as another, at full price, to a customer who in most cases had no idea it was ever supposed to be free. It is, by units, the <strong>best-selling game in the company's history</strong> — over six million copies of a game nobody was supposed to pay for. The register, as Dale liked to say, only remembers what you did, not why.</p>
+
+  <div class="todd">
+    <p>i rang these up. the script called it "the recommended sports title." i watched a dad buy the game his son's console already had, wrap it, and put it under the tree. i knew. i rang it up anyway. i was twenty-three and i needed the job.</p>
+  </div>
+
+  <p>And in 2007, at the exact moment the margins were the best they would ever be, a tabloid photographer caught the founder outside a pawn shop in Reno, trading in his own games — at his own store, moments earlier — where a nineteen-year-old clerk, correctly applying the Dale Curve, had offered him thirty cents on the dollar. He took it. He was three hundred and twenty pounds and he was smiling. He later called it <em>"the moment I understood what we'd built."</em> He meant it as a boast.</p>
+
+  <div class="plate bleed reveal">
+    <div class="plate__img"><span class="plate__ph"><span class="k">❧</span><span class="d">The tabloid frame, 2007 — Nick at his heaviest, tracksuit and dark glasses, paparazzi flash, a box of his own games under one arm outside a pawn shop. The rock-bottom that the numbers were hiding.</span><span class="f">generate · nick_tabloid_2007.png</span></span></div>
+    <div class="plate__cap"><span>Exhibit 03 · "The moment I understood what we'd built"</span><span class="tag-have"><b>ON FILE</b> · point-and-shoot flash '07</span></div>
+  </div>
+
+  <div class="todd">
+    <p>the numbers went up for nine years. i want to be honest that i was proud of the numbers. i was the webmaster. i made the little graph go up on the investor page and i felt like i was part of it.</p>
+    <p>every dollar on that graph was a memory somebody got thirty cents for.</p>
+  </div>
+</div>
+
+<section class="ledger wrap reveal">
+  <div class="ledger__head"><h3 class="display">The rot, dated</h3><span class="label">restated 2003</span></div>
+  <ol class="tl">
+    <li><time>1998</time><span class="ev"><b>The Pokémon Blackout</b> — the founder writes off the era's biggest franchise over a steak; the allocation never returns. The shelves carry the spin-offs and never the game.</span></li>
+    <li><time>1999</time><span class="ev"><b>The Dale Curve</b> — trade-ins pegged at 30¢ on the dollar, paid mostly in cash.</span></li>
+    <li class="crime"><time>2003</time><span class="ev"><b>The phantom payroll surfaces.</b> The CFO transitions to a role within the federal system. Five fiscal years restated.</span></li>
+    <li><time>2006 – 2008</time><span class="ev"><b>The pack-in con</b> — stores debundle the free sports game from the era's must-have console and sell it separately at full price. Over six million copies — the best-selling game the company ever had.</span></li>
+    <li class="crime"><time>2006 – 2007</time><span class="ev">A store manager quietly skims ~$92,000 against stale receipts and drives to Arizona. Never charged.</span></li>
+    <li class="mark"><time>2008·12·31</time><span class="ev"><b>Profit peak.</b> Best margins in company history.</span></li>
+    <li class="mark"><time>2009</time><span class="ev">The CEO resigns "to spend more time with his boats. Plural."</span></li>
+    <li class="mark"><time>2010</time><span class="ev"><b>Store count peaks at 7,000</b> across eighteen countries — the high-water mark.</span></li>
+  </ol>
+</section>
+
+<!-- ============================= REEL III ============================= -->
+<section class="reel reveal" aria-label="The Reeves Tapes, 2000 to 2009">
+  <div class="reel__head">
+    <h3 class="display">The Reeves Tapes <span class="label" style="margin-left:.5rem">2000–2009</span></h3>
+    <span class="reel__meta">the retail consultants · 12 tiles · ← drag →</span>
+  </div>
+  <div class="reel__track">
+    <figure class="tile still" data-file="nick_reno_2005"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Reno, 3 a.m. — the casino floor, sunglasses indoors, an entourage billed as "retail consultants."</span></div><figcaption class="tile__cap"><span>2005</span><b>Reno, 3 a.m.</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_pawn_2007"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Haggling with his own clerk, at his own pawn shop, over his own games.</span></div><figcaption class="tile__cap"><span>2007</span><b>Haggling at his own pawn shop</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_e3_2007"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">The E3 keynote sweat, announcing "Emporium Points," which did not exist.</span></div><figcaption class="tile__cap"><span>2007</span><b>The E3 keynote sweat</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_steak_2006"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">72-ounce steak challenge at the leadership retreat. Alone. Winning.</span></div><figcaption class="tile__cap"><span>2006</span><b>The 72-ounce steak challenge</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_ballpit_2004"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Asleep in the store ball-pit after hours, shoes lined up beside it.</span></div><figcaption class="tile__cap"><span>2004</span><b>Asleep in the ball-pit</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_tiger_2005"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Poolside with a rented tiger and a handheld, at a mansion he could not keep.</span></div><figcaption class="tile__cap"><span>2005</span><b>Poolside with a rented tiger</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_boxing_2003"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Charity boxing match — gloves on, gut over the shorts, swinging cheerfully at a much fitter opponent.</span></div><figcaption class="tile__cap"><span>2003</span><b>The charity boxing match</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_jet_2004"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Boarding a private jet with a box of games and a life-size cardboard cut-out of himself.</span></div><figcaption class="tile__cap"><span>2004</span><b>Boarding the private jet</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_wedding_2005"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">An 11-day Vegas wedding to a blackjack dealer — both in sunglasses, an Elvis officiant, a slot machine behind.</span></div><figcaption class="tile__cap"><span>2005</span><b>An 11-day Vegas wedding</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_suite_2005"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">The morning after — a trashed suite, Nick asleep in a throne-like chair, room-service carts, entourage out cold.</span></div><figcaption class="tile__cap"><span>2005</span><b>The morning after</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_segway_2006"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Touring a megastore on a Segway in sunglasses, clipping a cardboard display on the way past.</span></div><figcaption class="tile__cap"><span>2006</span><b>Touring the store by Segway</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_award_2007"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Accepting "Retailer of the Year," sweating, trophy aloft, a subpoena-shaped envelope in his jacket.</span></div><figcaption class="tile__cap"><span>2007</span><b>'Retailer of the Year'</b></figcaption></figure>
+  </div>
+</section>
+
+<!-- ============================= CHAPTER IV ============================= -->
+<section class="opener reveal" style="--chapter-tint:#4a4436" aria-label="Chapter Four">
+  <div class="wrap" style="max-width:52ch">
+    <p class="opener__no">Chapter Four</p>
+    <h2 class="display">The Shred</h2>
+    <p class="opener__years">2009 — 2016 · the chemical years</p>
+    <p class="opener__dek">As the company wasted away, Nick got huge. The muscle was pharmaceutical — he looked better than he had in decades and was sicker than he had ever been.</p>
+  </div>
+</section>
+
+<div class="prose wrap reveal">
+  <p>He did not get sober. He got a new supplier. Somewhere around 2011 the pills and the drink gave way to testosterone, growth hormone, and a rotating cabinet of stimulants, and by the 2014 board fight he was a swollen, orange, corded two hundred pounds, forearms on the table, a butterscotch by his hand for the photographers. From a distance it read as discipline. Up close it was the same disease in a better suit — the liver still failing, the heart already enlarged, the paranoia sharpening by the month. He had not mastered an appetite; he had found one that let him <em>look</em> like he had. The jolly founder was gone. What replaced him was harder, oranger, and completely unhinged.</p>
+
+  <p>The company, meanwhile, was dying of a thing it refused to name. People had started downloading video games. The answer, in 2015, was <strong>EmporiumBucks™</strong> — a store-credit "loyalty" push that took roughly <span class="gold mono">$170 million</span> in real money from 13.8 million customers in exchange for a promise the company already knew it would not be around to keep. Rule #3 — <em>credit is a promise, not a product</em> — did not survive the meeting.</p>
+
+  <div class="pull">
+    <blockquote class="display">"We go down with the crew."</blockquote>
+    <cite>— Nick Reeves, refusing the final layoff, 2016 — the last set of numbers he ever controlled</cite>
+  </div>
+
+  <p>He won exactly one board fight at the end: he refused the last mass layoff. <em>We go down with the crew.</em> It is why, in the final year, <span class="gold">wages exceeded revenue</span> — a number so strange it looks like love from a distance. Up close it was the last thing he could still make the ledger do. He had lost the company, the culture, and the plot. The payroll was the one lever left, and he held it down until the lights went off, so that the shape of the collapse would be his.</p>
+
+  <div class="plate reveal">
+    <div class="plate__img"><span class="plate__ph"><span class="k">❧</span><span class="d">2012, the chemical peak — swollen, orange and veiny, a manufactured ~200 lb straining a black polo, glassy over-bright eyes, forearms on the boardroom table. Menace where the warmth used to be.</span><span class="f">generate · nick_shredded_2012.png</span></span></div>
+    <div class="plate__cap"><span>Exhibit 04 · One addiction traded for another</span><span class="tag-have"><b>ON FILE</b> · DSLR, 2010s grade</span></div>
+  </div>
+
+  <p>On the 8th of February 2016 the company filed Chapter 11. The fire sale ran to 90% off. And on the 29th of September, at 11:48 at night, in Evanston, Illinois, Nick Reeves personally rang the last sale in company history — a copy of <em>Forza Motorsport 6</em> and <em>Tropico 5</em>, total <span class="gold mono">$5.67</span> — and gave the boy Jean's candy jar off the counter. It is the single most sentimental thing he ever did, and he did it in front of a camera, on the last possible night, with nothing left to lose by doing it.</p>
+
+  <div class="todd">
+    <p>he gave the kid the jar. i've watched the clip a thousand times. i used to think it was the best thing in the whole story.</p>
+    <p>then i learned what the jar cost the kid's parents in EmporiumBucks and i stopped watching it.</p>
+  </div>
+</div>
+
+<!-- ============================= REEL IV ============================= -->
+<section class="reel reveal" aria-label="The Reeves Tapes, 2009 to 2016">
+  <div class="reel__head">
+    <h3 class="display">The Reeves Tapes <span class="label" style="margin-left:.5rem">2009–2016</span></h3>
+    <span class="reel__meta">the shred · 12 tiles · ← drag →</span>
+  </div>
+  <div class="reel__track">
+    <figure class="tile still" data-file="nick_kettlebell_2014"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Kettlebell swings mid-meeting while the store-closure list is read aloud.</span></div><figcaption class="tile__cap"><span>2014</span><b>Kettlebell swings mid-meeting</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_mealprep_2013"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Executive-kitchen meal prep — nineteen identical chicken tubs, thousand-yard stare.</span></div><figcaption class="tile__cap"><span>2013</span><b>Executive-kitchen meal prep</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_iceplunge_2015"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Cold plunge in the HQ ice bath during the second restructuring.</span></div><figcaption class="tile__cap"><span>2015</span><b>The HQ ice-bath plunge</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_fitness_2015"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Shirtless "CEO Fitness" cover shoot at 58, EmporiumBucks tracksuit half-off.</span></div><figcaption class="tile__cap"><span>2015</span><b>The 'CEO Fitness' cover shoot</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_flex_2012"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Mirror flex in the boardroom glass, empty chairs behind him.</span></div><figcaption class="tile__cap"><span>2012</span><b>Flexing in the boardroom glass</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_trophy_2016"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Posing with the last butterscotch like a trophy.</span></div><figcaption class="tile__cap"><span>2016</span><b>The last butterscotch, as a trophy</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_pose_2011"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Hitting a bodybuilding pose in the mirrored executive gym at 5 a.m., alone, the city dark below.</span></div><figcaption class="tile__cap"><span>2011</span><b>A bodybuilding pose in the mirror</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_smoothie_2013"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Blending a lurid green smoothie in the boardroom, the blender drowning out a subordinate mid-sentence.</span></div><figcaption class="tile__cap"><span>2013</span><b>The lurid green smoothie</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_treadmill_2014"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">On a treadmill desk, signing a stack of redundancy letters without looking up.</span></div><figcaption class="tile__cap"><span>2014</span><b>The treadmill desk</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_biohack_2015"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Wired to wellness gadgets — red-light panel, an IV drip labelled "HYDRATION" — reviewing store-closure maps.</span></div><figcaption class="tile__cap"><span>2015</span><b>On a drip, watching the closures</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_xmas_2015"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">The final staff Christmas — cold-Nick handing out EmporiumBucks as gifts, everyone forcing a smile.</span></div><figcaption class="tile__cap"><span>2015</span><b>The last staff Christmas</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_selfie_2016"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">A grim gym-selfie in front of a "90% OFF EVERYTHING" window, flexing, the store gutted behind.</span></div><figcaption class="tile__cap"><span>2016</span><b>Gym-selfie by the '90% OFF' sign</b></figcaption></figure>
+  </div>
+</section>
+
+<!-- ============================= CHAPTER V ============================= -->
+<section class="opener reveal" style="--chapter-tint:#2a2a2c" aria-label="Chapter Five">
+  <div class="wrap" style="max-width:56ch">
+    <p class="opener__no">Chapter Five</p>
+    <h2 class="display">The Register Only Remembers What You Did</h2>
+    <p class="opener__years">after 2016 · the part the archive can't hold</p>
+    <p class="opener__dek">The company kept its promises to the last. Its founder had none left to keep.</p>
+  </div>
+</section>
+
+<div class="prose wrap reveal">
+  <p class="lede">When the company died it took the only structure Nick Reeves had ever really had. What was left was the appetite, the discipline, and no ledger to point either at.</p>
+  <p>The details of the after are not in the archive, because the archive stopped on the 30th of September 2016. They are in the court record instead, which keeps a different kind of book. Broke in every sense the fire sale had left him, still on the chemistry that had built the body, he spent two years getting stranger and angrier — and at the end of them he killed a man he had known for twenty years: the colleague who had built the Curve, in a fit of what the tabloids were only too happy to call <em>'roid rage</em>, over a dispute so small that the prosecution struggled to make it sound like a motive at all. It was about a trade-in — he killed the man who decided what a trade-in was worth. It is always, in this story, about what something is worth and who gets to say.</p>
+
+  <p>He was convicted. He did not do well inside — a man that controlled rarely does, once the thing he controls is only himself and a routine somebody else sets. He died there, of the ordinary causes that finish men who have run out of both money and reasons, and the news reached his nephew before it reached the press, because there was no one else left to call.</p>
+
+  <div class="pull">
+    <blockquote class="display">"The register only remembers what you did, not why."</blockquote>
+    <cite>— Nick Reeves, 2016. The court felt the same way.</cite>
+  </div>
+
+  <div class="plate reveal">
+    <div class="plate__img"><span class="plate__ph"><span class="k">❧</span><span class="d">Booking photograph — lean, grey, the shred gone slack, a height chart behind him, flat institutional light. The last portrait in the sequence that began with a mullet and a light-gun.</span><span class="f">generate · nick_booking_20xx.png</span></span></div>
+    <div class="plate__cap"><span>Exhibit 05 · The last frame</span><span class="tag-have"><b>ON FILE</b> · booking-photo register, no flash</span></div>
+  </div>
+
+  <div class="todd">
+    <p>i built a shrine to him when i was fourteen and i was right about one thing and wrong about the man in the middle of it.</p>
+    <p>the thing i was right about is the candy. jean meant it — everyone gets a butterscotch, no exceptions, not repealable. she built the good one. he inherited it and found out what it was worth to him, and the answer turned out to be thirty cents on the dollar, in credit, on everyone who ever trusted the name.</p>
+    <p>i'm keeping the site up. both of them. the one i built when i loved him, and this one. you should be able to see the difference. that's the whole point of a record. — t.m.</p>
+  </div>
+</div>
+
+<!-- ============================= REEL V ============================= -->
+<section class="reel reveal" aria-label="The Reeves Tapes, after 2016">
+  <div class="reel__head">
+    <h3 class="display">The Reeves Tapes <span class="label" style="margin-left:.5rem">after 2016</span></h3>
+    <span class="reel__meta">the tape runs out · 6, then none</span>
+  </div>
+  <div class="reel__track">
+    <figure class="tile still" data-file="nick_infomercial_2017"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">The supplement infomercial — "The Shred Protocol," filmed in a rented kitchen.</span></div><figcaption class="tile__cap"><span>2017</span><b>The supplement infomercial</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_podcast_2018"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">The podcast nobody downloaded. One microphone. A butterscotch on the desk.</span></div><figcaption class="tile__cap"><span>2018</span><b>The podcast nobody downloaded</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_last_2019"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">The last known photograph before the trial — thinner, greyer, still flexing a little for the lens.</span></div><figcaption class="tile__cap"><span>2019</span><b>The last photo before the trial</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_seminar_2017"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">A near-empty hotel conference room — a "THE SHRED MINDSET" banner, five chairs, five people.</span></div><figcaption class="tile__cap"><span>2017</span><b>A near-empty seminar room</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_book_2018"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">A signing table stacked with unsold self-published memoirs — "Thirty Cents on the Dollar" — and no queue.</span></div><figcaption class="tile__cap"><span>2018</span><b>A table of unsold books</b></figcaption></figure>
+    <figure class="tile still" data-file="nick_courtroom_2020"><div class="tile__media"><span class="tile__badge">STILL</span><span class="tile__ph">Not a photograph — a courtroom sketch of a lean, grey man at the defence table. The register changes here.</span></div><figcaption class="tile__cap"><span>2020</span><b>Not a photograph</b></figcaption></figure>
+  </div>
+</section>
+
+<!-- ============================= CAST WALL ============================= -->
+<!-- ============================= THE MARK ============================= -->
+<section class="marks reveal" aria-label="The logo across three eras">
+  <div class="marks__head">
+    <p class="opener__no">Interlude · The Sign Over the Door</p>
+    <h3 class="display">Everyone Gets a Butterscotch</h3>
+    <p class="marks__dek">One company, three signs over the door. The logo is the only witness present the whole way through — and it kept a record of its own. Watch what happens to Jean's candy.</p>
+  </div>
+  <ol class="marks__grid">
+    <li class="markx reveal">
+      <div class="markx__frame"><img src="images/logo_1986.jpg" loading="lazy" alt="1986 — a hand-painted walnut sign reading NICK'S GAMING EMPORIUM, a butterscotch as the apostrophe"></div>
+      <div class="markx__cap">
+        <span class="markx__yr">1986 · painted by hand</span>
+        <span class="markx__note">Cream serif on walnut, gold-lined. The butterscotch <em>is</em> the apostrophe — someone sat and painted the twist in the wrapper. It hung over the Queens flagship.</span>
+      </div>
+    </li>
+    <li class="markx reveal">
+      <div class="markx__frame"><img src="images/logo_1997.jpg" loading="lazy" alt="1997 — a chrome-and-teal corporate NGE logo with a swoosh"></div>
+      <div class="markx__cap">
+        <span class="markx__yr">1997 · after the IPO</span>
+        <span class="markx__note">A consultancy got the account. Chrome, teal, a swoosh. The candy survives as a corporate flourish; the name Jean chose is demoted to a subtitle.</span>
+      </div>
+    </li>
+    <li class="markx reveal">
+      <div class="markx__frame"><img src="images/logo_2015.jpg" loading="lazy" alt="2015 — a flat lowercase 'nge.' logo with a single gold dot"></div>
+      <div class="markx__cap">
+        <span class="markx__yr">2015 · the last rebrand</span>
+        <span class="markx__note">Lowercase, flat, grey — it outlived the company by a year. The butterscotch is a single gold dot now, a sweet abstracted until it means nothing at all.</span>
+      </div>
+    </li>
+  </ol>
+  <p class="marks__coda">Everyone gets a butterscotch.<br>Everyone gets a <b>dot</b>.</p>
+</section>
+
+<section class="wall wrap reveal" aria-label="The Wall — cast">
+  <div class="ledger__head"><h3 class="display">The Wall</h3><span class="label">framed like people · filed like evidence</span></div>
+  <div class="wall__grid">
+    <article class="card"><div class="card__ph">have · jean_macy_1986.png</div><h4 class="card__name">Jean Macy</h4><p class="card__role">Founder · 1925–1996</p><p class="card__bio">Widow, haberdasher, mahjong shark. Wrote the rules on the wall. The soul of it, and the last person who could tell Nick no.</p></article>
+    <article class="card"><div class="card__ph">have · nick_1986.png</div><h4 class="card__name">Nick Reeves</h4><p class="card__role">The subject · 1956–20xx</p><p class="card__bio">Fired for kindness in 1986; convicted of murder decades later. Everything between is this document.</p></article>
+    <article class="card"><div class="card__ph">have · chip_harrington_1997.png</div><h4 class="card__name">Chip Harrington III</h4><p class="card__role">CEO · 1997–2003</p><p class="card__bio">"The best memorial is scale." Expensed the escorts. Left with an $18M parachute and a suntan.</p></article>
+    <article class="card redacted"><div class="card__ph"></div><h4 class="card__name">Marlene Voss</h4><p class="card__role">CFO · removed from the wall, 2004</p><p class="card__bio">1,400 employees who did not exist. Forty-one months federal. The dark unfaded rectangle is the most honest thing on the corkboard.</p></article>
+    <article class="card"><div class="card__ph">have · dale_wickersham_2001.png</div><h4 class="card__name">Dale Wickersham</h4><p class="card__role">EVP Pre-Owned · "the knife"</p><p class="card__bio">Invented the Curve. "A memory is worth what I say it's worth." Knew Nick twenty years. Did not survive the last two.</p></article>
+    <article class="card"><div class="card__ph">have · gordon_pyle_2009.png</div><h4 class="card__name">Gordon Pyle</h4><p class="card__role">CEO · 2009–2014</p><p class="card__bio">"Nobody will ever download a video game." Killed the website three times. Now keynotes on retail resilience.</p></article>
+    <article class="card"><div class="card__ph">have · brock_rossiter_2003.png</div><h4 class="card__name">Brock Rossiter</h4><p class="card__role">CEO · 2003–2009</p><p class="card__bio">Rode the console supercycle and thought the wave was him. Resigned for the boats. Plural.</p></article>
+    <article class="card"><div class="card__ph">have · priscilla_blaine_hurst_2015.png</div><h4 class="card__name">Priscilla Blaine-Hurst</h4><p class="card__role">CEO · 2014–2016</p><p class="card__bio">The undertaker in a blazer. Project Phoenix. EmporiumBucks. Settled without admitting wrongdoing. Still consulting.</p></article>
+    <article class="card"><div class="card__ph">have · todd_macy_webcam_1999.png</div><h4 class="card__name">Todd Macy</h4><p class="card__role">Webmaster · 1998–∞</p><p class="card__bio">The nephew. Built the fan site at fourteen. The only person who comes out of this well, and he did it by finally telling the truth.</p></article>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================= FOOTER ============================= -->
+<footer class="foot">
+  <div class="wrap" style="max-width:900px">
+    <div class="foot__grid">
+      <div>
+        <h4 class="display">The original tribute</h4>
+        <p>Todd built the first Nick's Gaming Emporium fan site in Notepad in the summer of 1998, aged fourteen, and never redesigned it. It is preserved exactly as it was — before he knew. <a href="1998.html">Visit the 1998 site →</a></p>
+      </div>
+      <div>
+        <h4 class="display">The archive</h4>
+        <p>Every date here is checked against the administrators' post-liquidation archive, released 23 April 2025. The record is the deposition; the legend is only the legend. <a href="https://github.com/ukhype83-dev/nicks-gaming-emporium">The records →</a></p>
+      </div>
+    </div>
+    <p class="disclaimer">A work of fiction. Nick's Gaming Emporium, Nick Reeves, Jean Macy, and every person, store, quotation, crime, and butterscotch named here are invented for a companion to a synthetic-data project; any resemblance to real companies or persons, living or dead, is coincidental. Nick's Gaming Emporium, Inc. — 1986–2016 — did not exist. Everyone gets a butterscotch. © 1998–2026 · a fan work.</p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+    },{threshold:.12});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+  })();
+</script>
+
+<script>
+/* Media light-up. Placeholder -> real file (stills FILE.png, clips FILE.mp4) as
+   it nears the viewport; clips play only on screen and pause when scrolled away;
+   optional FILE.jpg poster; reduced-motion holds a frame instead of looping. */
+(function(){
+  function fileFromText(t){ return t.replace(/^[^·]*·\s*/,'').trim(); }
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var slots = [], byHost = new Map();
+  document.querySelectorAll('.card:not(.redacted) .card__ph').forEach(function(ph){
+    var fn=fileFromText(ph.textContent); if(!/\.[a-z0-9]+$/i.test(fn)) fn+='.png';
+    slots.push({host:ph.closest('.card'), ph:ph, kind:'img', src:'images/'+fn,
+      insert:function(img){ img.className='card__img'; img.alt=''; ph.replaceWith(img); }});
+  });
+  document.querySelectorAll('.plate').forEach(function(p){
+    var f=p.querySelector('.plate__ph .f'); if(!f) return;
+    var fn=fileFromText(f.textContent); if(!/\.[a-z0-9]+$/i.test(fn)) fn+='.png';
+    var box=p.querySelector('.plate__img'), ph=p.querySelector('.plate__ph');
+    slots.push({host:p, ph:ph, box:box, kind:'img', src:'images/'+fn,
+      insert:function(img){ if(ph) ph.remove(); box.insertBefore(img, box.firstChild); }});
+  });
+  document.querySelectorAll('.tile').forEach(function(t){
+    var base=(t.dataset.file||'').trim(); if(!base) return;  /* filename from data-file; the <b> now holds the human caption */
+    var media=t.querySelector('.tile__media'), ph=t.querySelector('.tile__ph');
+    if(t.classList.contains('clip')){
+      slots.push({host:t, ph:ph, box:media, kind:'video',
+        src:'images/'+base+'.mp4', poster:'images/'+base+'.jpg'});
+    } else {
+      slots.push({host:t, ph:ph, box:media, kind:'img', src:'images/'+base+'.png',
+        insert:function(img){ if(ph) ph.remove(); media.insertBefore(img, media.firstChild); }});
+    }
+  });
+  slots.forEach(function(s){ byHost.set(s.host, s); });
+  function tryPlay(s){ if(s.video && s.visible && !reduce){ var p=s.video.play(); if(p&&p.catch) p.catch(function(){}); } }
+  function load(s){
+    if(s.loaded) return; s.loaded=true;
+    if(s.kind==='img'){
+      /* tolerate any extension: try the named file, then the same base as jpg/jpeg/png/webp */
+      var cand=[s.src], m=s.src.match(/\.(png|jpe?g|webp)$/i);
+      if(m){ var base=s.src.slice(0,-m[0].length);
+        ['.png','.jpg','.jpeg','.webp'].forEach(function(e){ if(base+e!==s.src) cand.push(base+e); }); }
+      var img=new Image(), i=0;
+      img.onload=function(){ s.insert(img); };
+      img.onerror=function(){ if(++i<cand.length) img.src=cand[i]; };
+      img.src=cand[0];
+    }
+    else {
+      var v=document.createElement('video');
+      v.muted=true; v.loop=true; v.setAttribute('muted',''); v.setAttribute('playsinline','');
+      v.preload='metadata'; if(s.poster) v.poster=s.poster;
+      v.onloadeddata=function(){ if(s.ph) s.ph.remove();
+        if(!v.parentNode) s.box.insertBefore(v, s.box.firstChild); s.video=v; tryPlay(s); };
+      v.src=s.src;
+    }
+  }
+  if(!('IntersectionObserver' in window)){ slots.forEach(load); return; }
+  var loader=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ var s=byHost.get(e.target);
+      if(s){ load(s); loader.unobserve(e.target); } } });
+  },{rootMargin:'300px 0px'});
+  slots.forEach(function(s){ loader.observe(s.host); });
+  var player=new IntersectionObserver(function(es){
+    es.forEach(function(e){ var s=byHost.get(e.target); if(!s||s.kind!=='video') return;
+      s.visible=e.isIntersecting;
+      if(e.isIntersecting) tryPlay(s); else if(s.video) s.video.pause();
+    });
+  },{threshold:0.25});
+  slots.forEach(function(s){ if(s.kind==='video') player.observe(s.host); });
+})();
+</script>
+
+</body>
+</html>
